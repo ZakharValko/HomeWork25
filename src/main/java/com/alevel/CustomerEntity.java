@@ -1,6 +1,7 @@
 package com.alevel;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -19,15 +20,12 @@ public class CustomerEntity {
 
     @Column(name = "city")
     private String city;
-    
-    public CustomerEntity() {
-    }
 
-    public CustomerEntity(int id, String name, String country, String city) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-        this.city = city;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderEntity> orders;
+
+    public CustomerEntity() {
+
     }
 
     public CustomerEntity(String name, String country, String city) {
@@ -68,6 +66,14 @@ public class CustomerEntity {
         this.city = city;
     }
 
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "CustomerEntity{" +
@@ -75,6 +81,7 @@ public class CustomerEntity {
                 ", name='" + name + '\'' +
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
-                '}';
+                ", orders=" + orders +
+                "}\n";
     }
 }
