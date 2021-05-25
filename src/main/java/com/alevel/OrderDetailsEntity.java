@@ -17,7 +17,11 @@ public class OrderDetailsEntity {
     private ProductEntity product;
 
     @Column(name = "quantity")
-    int quantity;
+    private int quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private OrderEntity order;
 
     public OrderDetailsEntity() { }
 
