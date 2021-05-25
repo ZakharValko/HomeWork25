@@ -1,9 +1,10 @@
 package com.alevel;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class ProductEntity {
 
     @Id
@@ -17,9 +18,8 @@ public class ProductEntity {
     @Column(name = "price")
     private int price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_details_id", referencedColumnName = "id")
-    private OrderDetailsEntity orderDetails;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderDetailsEntity> orderDetails;
 
     public ProductEntity() { }
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "order_details")
+@Table(name = "orders_details")
 public class OrderDetailsEntity {
 
     @Id
@@ -12,8 +12,9 @@ public class OrderDetailsEntity {
     @Column(name = "id")
     private long id;
 
-    @OneToMany(mappedBy = "order_details", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ProductEntity> products;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private ProductEntity product;
 
     @Column(name = "quantity")
     int quantity;
@@ -28,12 +29,12 @@ public class OrderDetailsEntity {
         this.id = id;
     }
 
-    public List<ProductEntity> getProducts() {
-        return products;
+    public ProductEntity getProduct() {
+        return product;
     }
 
-    public void setProducts(List<ProductEntity> productIds) {
-        this.products = productIds;
+    public void setProduct(ProductEntity product) {
+        this.product = product;
     }
 
     public int getQuantity() {
