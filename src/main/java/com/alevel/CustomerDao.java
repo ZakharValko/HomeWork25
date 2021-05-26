@@ -1,5 +1,8 @@
 package com.alevel;
 
+import net.sf.ehcache.search.expression.Or;
+import org.hibernate.Transaction;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -9,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class CustomerDao {
@@ -27,8 +31,9 @@ public class CustomerDao {
 
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.lessThan(from.get("id"), 3));
-        predicates.add(criteriaBuilder.equal(from.get("city"), "Washington"));
+        predicates.add(criteriaBuilder.equal(from.get("city"), "kharkiv"));
         query.where(predicates.toArray(new Predicate[predicates.size()]));
+        System.out.println(entityManager.createQuery(query).getResultList());
         return entityManager.createQuery(query).getResultList();
     }
 
@@ -48,5 +53,16 @@ public class CustomerDao {
         entityManager.persist(newEntity);
         transaction.commit();
         return getById(newEntity.getId());
+    }
+
+    public List<CustomerEntity> customersWithOrders(){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerEntity> query = criteriaBuilder.createQuery(CustomerEntity.class);
+        Root<CustomerEntity> root = query.from(CustomerEntity.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(criteriaBuilder.isNotEmpty(root.get("orders")));
+        query.where(predicates.toArray(new Predicate[predicates.size()]));
+        return entityManager.createQuery(query).getResultList();
     }
 }
